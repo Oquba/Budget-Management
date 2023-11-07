@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <h2 class="d-flex justify-content-center">Remaining Budget:</h2>
+    <h3 class="d-flex justify-content-center"> ${{ '%0.2f'|format(remaining_budget) }}</h3>
+</div>
+    {% for transaction in transactions %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('user_transactions', username = transaction.username) }}">{{ transaction.username }}</a>
+                </div>
+                <h2><a class="article-title", href="{{ url_for('transaction', id=transaction.id) }}">${{ transaction.amount }}</h2>
+                <p class="article-content">
+                    Date: {{ transaction.transaction_date.strftime('%Y-%m-%d') }} - Category: {{ transaction.category }}<br>
+                    Description: {{ transaction.description }}<br>
+                    Card Name: {{ transaction.card_name }}
+                </p>
+            </div>
+        </article>
+    {% endfor %}
+    {% for page_num in transactions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if transactions.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}
